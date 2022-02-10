@@ -185,6 +185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   occupiedColor: {r: 1, g: 0, b: 0, a: 1}
   availableColor: {r: 1, g: 1, b: 1, a: 1}
+  exploredColor: {r: 0, g: 0, b: 0, a: 1}
+  pathColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &1303209886982441901
 GameObject:
   m_ObjectHideFlags: 0

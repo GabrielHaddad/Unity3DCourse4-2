@@ -9,17 +9,20 @@ public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color occupiedColor = Color.red;
     [SerializeField] Color availableColor = Color.white;
+    [SerializeField] Color exploredColor = new Color(128,0,128);
+    [SerializeField] Color pathColor = Color.blue;
     
     TextMeshPro label;
-    Waypoint waypoint;
     Vector2Int coordinates = new Vector2Int();
+    GridManager gridManager;
 
     void Awake() 
     {
         label = GetComponent<TextMeshPro>();
         label.enabled = false;
 
-        waypoint = GetComponentInParent<Waypoint>();
+        gridManager = FindObjectOfType<GridManager>();
+
         DisplayCoordinates();
     }
    
@@ -46,22 +49,38 @@ public class CoordinateLabeler : MonoBehaviour
 
     void DisplayCoordinates()
     {
-        Vector3 unityGridSize = UnityEditor.EditorSnapSettings.move;
-        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / unityGridSize.x);
-        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / unityGridSize.z);
+        if (gridManager == null) { return; }
+
+        int unityGridSize = gridManager.UnityGridSize;
+        coordinates.x = Mathf.RoundToInt(transform.parent.position.x / unityGridSize);
+        coordinates.y = Mathf.RoundToInt(transform.parent.position.z / unityGridSize);
 
         label.text = $"{coordinates.x},{coordinates.y}";
     }
 
     void UpdateTextColor()
     {
-        if (waypoint.IsPlaceble)
+        if (gridManager == null) { return; }
+
+        Node node = gridManager.GetNode(coordinates);
+
+        if (node == null) { return; }
+
+        if (!node.isWalkable)
         {
-            label.color = availableColor;
+            label.color = occupiedColor;
+        }
+        else if (node.isPath)
+        {
+            label.color = pathColor;
+        }
+        else if (node.isExplored)
+        {
+            label.color = exploredColor;
         }
         else
         {
-            label.color = occupiedColor;
+            label.color = availableColor;
         }
     }
 
