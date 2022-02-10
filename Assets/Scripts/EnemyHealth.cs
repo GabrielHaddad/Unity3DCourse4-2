@@ -1,0 +1,47 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Enemy))]
+public class EnemyHealth : MonoBehaviour
+{
+    [SerializeField] int maxHP = 5;
+
+    [Tooltip("Adds amount to maxHP when enemy dies")]
+    [SerializeField] int difficultyRamp = 1;
+    int currentHP = 0;
+
+    Enemy enemy;
+
+    void OnEnable()
+    {
+        currentHP = maxHP;
+    }
+
+    void Start()
+    {
+        enemy = GetComponent<Enemy>();
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        TakeDamage();
+    }
+
+    void TakeDamage()
+    {
+        currentHP--;
+
+        if (currentHP <= 0)
+        {
+            KillEnemy();
+        }
+    }
+
+    void KillEnemy()
+    {
+        gameObject.SetActive(false);
+        maxHP += difficultyRamp;
+        enemy.RewardGold();
+    }
+}
