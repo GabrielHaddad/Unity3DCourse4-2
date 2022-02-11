@@ -41,8 +41,12 @@ public class Tile : MonoBehaviour
 
     void PlaceTowers()
     {
-        bool isPlaced = towerPrefab.CreateTower(towerPrefab, transform.position);
-        isPlaceble = !isPlaced;
-        gridManager.BlockNode(coordinates);
+        bool isSuccessful = towerPrefab.CreateTower(towerPrefab, transform.position);
+
+        if (isSuccessful)
+        {
+            gridManager.BlockNode(coordinates);
+            pathFinder.NotifyReceivers();
+        }
     }
 }
